@@ -42,3 +42,26 @@ class AudioApi(Resource):
             audio = Song.objects.get(ID=audio_file_id).to_json()
 
         return Response(audio, mimetype="application/json", status=200)
+
+    def put(self, audio_file_type, audio_file_id):
+        body = request.get_json()
+        audio_file_type = audio_file_type.strip().lower()
+        if audio_file_type == 'song':
+            Song.objects.get(ID=audio_file_id).update(**body)
+
+        resp = {
+            'id': audio_file_id,
+            'message': 'Successfully updated!',
+        }
+        return Response(dumps(resp), mimetype="application/json", status=200)
+
+    def delete(self, audio_file_type, audio_file_id):
+        audio_file_type = audio_file_type.strip().lower()
+        if audio_file_type == 'song':
+            Song.objects.get(ID=audio_file_id).delete()
+
+        resp = {
+            'id': audio_file_id,
+            'message': 'Successfully deleted!',
+        }
+        return Response(dumps(resp), mimetype="application/json", status=200)
