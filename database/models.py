@@ -5,6 +5,7 @@ from .db import db
 class AudioFile(db.Document):
     ID = db.IntField(required=True, unique=True)
     duration = db.IntField(required=True, min_value=0)
+    uploaded_time = db.DateTimeField(required=True)
 
     meta = {'allow_inheritance': True}
 

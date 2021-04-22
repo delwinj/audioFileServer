@@ -1,5 +1,6 @@
 # external packages
 from json import loads, dumps
+from datetime import datetime, timezone
 
 
 def del_metadata(json_data):
@@ -19,3 +20,17 @@ def remove_metadata(json_str):
             del_metadata(data)
 
     return dumps(json_data)
+
+
+def parse_date(dt_str):
+    formats = (
+        "%Y-%m-%dT%H:%M:%S.%f%z",
+        "%Y-%m-%dT%H:%M:%S%z",
+    )
+    for fmt in formats:
+        try:
+            d = datetime.strptime(dt_str, fmt)
+            return d.astimezone(tz=timezone.utc)
+        except ValueError:
+            pass
+    raise ValueError('no valid date format found')

@@ -4,10 +4,11 @@ from flask_restful import Resource
 
 # local packages
 from database.models import Song, Podcast, Audiobook
-from tools.manipulate_data import remove_metadata
+from tools.manipulate_data import remove_metadata, parse_date
 
 # external packages
 from json import dumps
+from datetime import datetime, timezone
 
 
 def create_audio_obj(audio_file_type):
@@ -26,6 +27,8 @@ class CreateAudioApi(Resource):
         body = request.get_json()
         audio_file_type = body['audioFileType']
         audio_file_metadata = body['audioFileMetadata']
+        audio_file_metadata['uploaded_time'] = parse_date(audio_file_metadata['uploaded_time'])
+
         Audio = create_audio_obj(audio_file_type)
         audio = Audio(**audio_file_metadata).save()
 
@@ -55,6 +58,7 @@ class AudioApi(Resource):
 
     def put(self, audio_file_type, audio_file_id):
         body = request.get_json()
+        body['uploaded_time'] = parse_date(body['uploaded_time'])
         Audio = create_audio_obj(audio_file_type)
         Audio.objects.get(ID=audio_file_id).update(**body)
 
