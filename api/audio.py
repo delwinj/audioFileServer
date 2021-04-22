@@ -4,6 +4,7 @@ from flask_restful import Resource
 
 # local packages
 from database.models import Song
+from tools.manipulate_data import remove_metadata
 
 # external packages
 from json import dumps
@@ -31,8 +32,9 @@ class AudiosApi(Resource):
         audio_file_type = audio_file_type.strip().lower()
         if audio_file_type == 'song':
             audio_files = Song.objects().to_json()
+        resp = remove_metadata(audio_files)
 
-        return Response(audio_files, mimetype="application/json", status=200)
+        return Response(resp, mimetype="application/json", status=200)
 
 
 class AudioApi(Resource):
@@ -40,8 +42,9 @@ class AudioApi(Resource):
         audio_file_type = audio_file_type.strip().lower()
         if audio_file_type == 'song':
             audio = Song.objects.get(ID=audio_file_id).to_json()
+        resp = remove_metadata(audio)
 
-        return Response(audio, mimetype="application/json", status=200)
+        return Response(resp, mimetype="application/json", status=200)
 
     def put(self, audio_file_type, audio_file_id):
         body = request.get_json()
