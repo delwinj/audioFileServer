@@ -17,3 +17,9 @@ class Podcast(AudioFile):
     name = db.StringField(required=True, max_length=100)
     host = db.StringField(required=True, max_length=100)
     participants = db.ListField(db.StringField(max_length=100), max_length=10)
+
+
+class Audiobook(AudioFile):
+    title = db.StringField(required=True, max_length=100)
+    author = db.StringField(required=True, max_length=100)
+    narrator = db.StringField(required=True, max_length=100)
