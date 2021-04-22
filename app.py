@@ -1,12 +1,21 @@
+# flask packages
 from flask import Flask
+from flask_restful import Api
+
+# local packages
+from database.db import initialize_db
+from api.routes import initialize_routes
 
 app = Flask(__name__)
+api =Api(app)
 
+app.config['MONGODB_SETTINGS'] = {
+    'host': 'mongodb://localhost/audio-db'
+}
+app.url_map.strict_slashes = False
 
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
-
+initialize_db(app)
+initialize_routes(api)
 
 if __name__ == '__main__':
     app.run()
