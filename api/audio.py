@@ -3,7 +3,7 @@ from flask import Response, request
 from flask_restful import Resource
 
 # local packages
-from database.models import Song
+from database.models import Song, Podcast
 from tools.manipulate_data import remove_metadata
 
 # external packages
@@ -19,6 +19,8 @@ class CreateAudioApi(Resource):
 
         if audio_file_type == 'song':
             audio = Song(**audio_file_metadata).save()
+        elif audio_file_type == 'podcast':
+            audio = Podcast(**audio_file_metadata).save()
 
         resp = {
             'id': audio.ID,
@@ -32,6 +34,8 @@ class AudiosApi(Resource):
         audio_file_type = audio_file_type.strip().lower()
         if audio_file_type == 'song':
             audio_files = Song.objects().to_json()
+        elif audio_file_type == 'podcast':
+            audio_files = Podcast.objects().to_json()
         resp = remove_metadata(audio_files)
 
         return Response(resp, mimetype="application/json", status=200)
@@ -42,6 +46,8 @@ class AudioApi(Resource):
         audio_file_type = audio_file_type.strip().lower()
         if audio_file_type == 'song':
             audio = Song.objects.get(ID=audio_file_id).to_json()
+        elif audio_file_type == 'podcast':
+            audio = Podcast.objects.get(ID=audio_file_id).to_json()
         resp = remove_metadata(audio)
 
         return Response(resp, mimetype="application/json", status=200)
@@ -51,6 +57,8 @@ class AudioApi(Resource):
         audio_file_type = audio_file_type.strip().lower()
         if audio_file_type == 'song':
             Song.objects.get(ID=audio_file_id).update(**body)
+        elif audio_file_type == 'podcast':
+            Podcast.objects.get(ID=audio_file_id).update(**body)
 
         resp = {
             'id': audio_file_id,
@@ -62,6 +70,8 @@ class AudioApi(Resource):
         audio_file_type = audio_file_type.strip().lower()
         if audio_file_type == 'song':
             Song.objects.get(ID=audio_file_id).delete()
+        elif audio_file_type == 'podcast':
+            Podcast.objects.get(ID=audio_file_id).delete()
 
         resp = {
             'id': audio_file_id,

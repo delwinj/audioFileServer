@@ -11,3 +11,9 @@ class AudioFile(db.Document):
 
 class Song(AudioFile):
     name = db.StringField(required=True, max_length=100)
+
+
+class Podcast(AudioFile):
+    name = db.StringField(required=True, max_length=100)
+    host = db.StringField(required=True, max_length=100)
+    participants = db.ListField(db.StringField(max_length=100), max_length=10)
