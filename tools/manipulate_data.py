@@ -1,3 +1,6 @@
+# internal packages
+from api.errors import DateFormatInvalidError
+
 # external packages
 from json import loads, dumps
 from datetime import datetime, timezone
@@ -33,4 +36,4 @@ def parse_date(dt_str):
             return d.astimezone(tz=timezone.utc)
         except ValueError:
             pass
-    raise ValueError('no valid date format found')
+    raise DateFormatInvalidError
