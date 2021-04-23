@@ -1,5 +1,5 @@
 # local packages
-from .audio import CreateAudioApi, AudiosApi, AudioApi
+from api.audio import CreateAudioApi, AudiosApi, AudioApi
 
 
 def initialize_routes(api):

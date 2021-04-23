@@ -1,36 +1,31 @@
-class InternalServerError(Exception):
+from http.client import HTTPException
+
+
+class InternalServerError(HTTPException):
     pass
 
 
-class SchemaValidationError(Exception):
+class SchemaValidationError(HTTPException):
     pass
 
 
-class ValidationError(Exception):
+class ValidationError(HTTPException):
     pass
 
 
-class AudioExistsError(Exception):
+class AudioExistsError(HTTPException):
     pass
 
 
-class UpdatingAudioError(Exception):
+class AudioDoesNotExistError(HTTPException):
+    status_code = 400
+
+
+class AudioTypeInvalidError(HTTPException):
     pass
 
 
-class DeletingAudioError(Exception):
-    pass
-
-
-class AudioDoesNotExistError(Exception):
-    pass
-
-
-class AudioTypeInvalidError(Exception):
-    pass
-
-
-class DateFormatInvalidError(Exception):
+class DateInvalidError(HTTPException):
     pass
 
 
@@ -51,24 +46,16 @@ errors = {
         "message": "Audio file with given id already exists",
         "status": 400
     },
-    "UpdatingAudioError": {
-        "message": "Updating movie added by other is forbidden",
-        "status": 400
-    },
-    "DeletingAudioError": {
-        "message": "Deleting movie added by other is forbidden",
-        "status": 400
-    },
     "AudioDoesNotExistError": {
-        "message": "Movie with given id doesn't exists",
+        "message": "Audio with given id doesn't exists",
         "status": 400
     },
     "AudioTypeInvalidError": {
         "message": "Audio type provided is invalid",
         "status": 400
     },
-    "DateFormatInvalidError": {
-        "message": "Updated time provided in an invalid format",
+    "DateInvalidError": {
+        "message": "Updated time provided in invalid or in an invalid format",
         "status": 400
     },
 }

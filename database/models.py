@@ -1,5 +1,5 @@
 # local packages
-from .db import db
+from database.db import db
 
 
 class AudioFile(db.Document):

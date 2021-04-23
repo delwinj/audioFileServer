@@ -6,8 +6,8 @@ from mongoengine import NotUniqueError, FieldDoesNotExist, DoesNotExist, Validat
 # local packages
 from database.models import Song, Podcast, Audiobook
 from tools.manipulate_data import remove_metadata, parse_date
-from api.errors import AudioExistsError, SchemaValidationError, InternalServerError, DateFormatInvalidError, \
-    AudioTypeInvalidError, AudioDoesNotExistError, DeletingAudioError, UpdatingAudioError
+from api.errors import AudioExistsError, SchemaValidationError, InternalServerError, AudioTypeInvalidError, \
+    AudioDoesNotExistError, DateInvalidError
 
 # external packages
 from json import dumps
@@ -48,8 +48,8 @@ class CreateAudioApi(Resource):
             raise AudioExistsError
         except AudioTypeInvalidError:
             raise AudioTypeInvalidError
-        except DateFormatInvalidError:
-            raise DateFormatInvalidError
+        except DateInvalidError:
+            raise DateInvalidError
         except Exception as e:
             raise InternalServerError
 
@@ -93,7 +93,7 @@ class AudioApi(Resource):
             Audio.objects.get(ID=audio_file_id).update(**body)
 
             resp = {
-                'id': audio_file_id,
+                'id': int(audio_file_id),
                 'message': 'Successfully updated!',
             }
             return Response(dumps(resp), mimetype="application/json", status=200)
@@ -102,11 +102,11 @@ class AudioApi(Resource):
         except ValidationError:
             raise ValidationError
         except DoesNotExist:
-            raise UpdatingAudioError
+            raise AudioDoesNotExistError
         except AudioTypeInvalidError:
             raise AudioTypeInvalidError
-        except DateFormatInvalidError:
-            raise DateFormatInvalidError
+        except DateInvalidError:
+            raise DateInvalidError
         except Exception as e:
             print(e)
             raise InternalServerError
@@ -117,14 +117,14 @@ class AudioApi(Resource):
             Audio.objects.get(ID=audio_file_id).delete()
 
             resp = {
-                'id': audio_file_id,
+                'id': int(audio_file_id),
                 'message': 'Successfully deleted!',
             }
             return Response(dumps(resp), mimetype="application/json", status=200)
         except ValidationError:
             raise ValidationError
         except DoesNotExist:
-            raise DeletingAudioError
+            raise AudioDoesNotExistError
         except AudioTypeInvalidError:
             raise AudioTypeInvalidError
         except Exception as e:

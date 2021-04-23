@@ -1,9 +1,9 @@
 # internal packages
-from api.errors import DateFormatInvalidError
+from api.errors import DateInvalidError
 
 # external packages
 from json import loads, dumps
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 
 def del_metadata(json_data):
@@ -32,8 +32,11 @@ def parse_date(dt_str):
     )
     for fmt in formats:
         try:
-            d = datetime.strptime(dt_str, fmt)
-            return d.astimezone(tz=timezone.utc)
+            d1 = datetime.strptime(dt_str, fmt)
+            d2 = datetime.utcnow()
+            if d2.astimezone(tz=timezone.utc) - d1.astimezone(tz=timezone.utc) > timedelta(seconds=60):
+                raise DateInvalidError
+            return d1.astimezone(tz=timezone.utc)
         except ValueError:
             pass
-    raise DateFormatInvalidError
+    raise DateInvalidError
